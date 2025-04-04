@@ -1,5 +1,37 @@
 # Samples de códigos
 
+
+configs()
+
+# Carrega Pacotes
+{ load_packages()
+  
+  library(tidyverse)  #pacote para manipulacao de dados
+  library(cluster)    #algoritmo de cluster
+  library(dendextend) #compara dendogramas
+  library(factoextra) #algoritmo de cluster e visualizacao
+  library(fpc)        #algoritmo de cluster e visualizacao
+  library(gridExtra)  #para a funcao grid arrange
+  library(readxl)
+  library(ggplot2)
+  library(stringr)
+  library(dplyr)
+  library(sparklyr)
+  library(writexl)
+  library(readxl)
+}
+
+ls() # lista variáveis  do Environment
+
+rm (a) # remove arquivos e variáveis do Environment
+rm (List = ls()) # remove todos arquivos e variáveis do Environment
+
+# Cria um vetor
+x <- c(1:5)
+
+matriz <- matrix(df_ln, nrow=3, ncol=3)
+
+
 #load/save
 { load("data.RData") # To load the data again
 save(data1, file = "data.RData") # Saving on object in RData format
@@ -57,9 +89,9 @@ MunicipioFinal <-  cbind(municipios2, municipiosfit) }
 }  
   
 #  Filtro de linhas
-{  despesas_vl <- dplyr::filter(despesas, tp_despesa == "Valor Liquidado")
-  
-  imdb %>% filter(ano > 2010, nota_imdb > 8.5)
+{  
+  dataset_filtrado <- dataset2 %>%
+    dplyr::filter(campo1 == 10 & (campo2 == "abc" | campo2 == "bcd"))
 }  
 
 #Cria time series (sequencia de datas)
@@ -97,7 +129,8 @@ consumo[,2:3]
 # Converte para numero para alfa e vice-versa 
 {
 numero <- as.numeric(texto)
-alfa <- str_pad(cadunico$CD_MUN,0)
+alfa <- stringr::str_pad(cadunico$CD_MUN,0)  # ou
+RMVale$COD_MUN <- as.character(RMVale$COD_MUN)
 }
 
 # Tibbles
@@ -121,4 +154,37 @@ dataset_cassificado <- arrange(dataset, (campo1, desc(campo2))
 # Sub strings 
 {
 Sub_var <- substr(variavel, inicio, fim)) # veja que é diferente de outras linguagens que normalmente fornece o tamanho
+}
+
+# Rename de colunas
+{
+covid_sp <- covid_sp %>% 
+  rename(data_sintomas = DT_SIN_PRI,
+         municipio = ID_MN_RESI)
+}
+
+#Delete colunas
+{
+covid_sp <- covid_sp %>% select(-c(VACINA_COV,DT_EVOLUCA))
+}
+
+# Transforma todas as counas em numericas
+{
+df2 = as.data.frame(sapply(df,as.numeric)) #transforma todas colunas em numericas
+}
+
+
+############## sumarização de valores  ##############
+{
+# ideal (mas não obrigatório) que o campo chave da sumarização seja CHAR
+  
+    tab_pagtos$Cod_Mun_IBGE <- stringr::str_pad(tab_pagtos$Cod_Mun_IBGE,0) # transforma cod ibge em char
+  
+    danos_sum <- mapa_danos %>% dplyr::group_by(Cod_Mun_IBGE) %>% 
+    dplyr::summarise(Num_mortes_total         = sum (DH_MORTOS),
+                     Danos_Humanos_total      = sum(DH_total_danos_humanos),
+                     Danos_Materiais_total    = sum(DM_total_danos_materiais),
+                     Valor_pago_2012_2024     = sum(Valor_Pago),
+                     Num_ocorrencias_total    = n(),
+                     num_anos_rep_total       = n_distinct(year(Data_Registro)))
 }

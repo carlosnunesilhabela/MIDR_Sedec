@@ -339,6 +339,14 @@ cod_ibge_7dig <- function(codigo_mun_6dig) {
   return(codigo_mun_6dig)
 }
 
+# Função escala Min-Max (Normalização)
+f_minmax <- function(x) {
+    return((x - min(x))/(max(x)-min(x)))
+  }
+f_minmaxn <- function(x) {
+  return(1- (x - min(x))/(max(x)-min(x)) )
+}
+
 
 ############################  Exemplo de execução das funções ############################### 
 
